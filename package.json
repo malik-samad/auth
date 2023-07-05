@@ -8,7 +8,9 @@
     "prestart": "npm run build",
     "start": "node build",
     "dev": "set NODE_ENV=development&& webpack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker:build": "docker-compose build --no-cache",
+    "docker:up": "docker-compose up --force-recreate"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +34,7 @@
     "webpack-shell-plugin-next": "^2.3.1"
   },
   "dependencies": {
+    "@vendia/serverless-express": "^4.10.4",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.3.1",

@@ -39,6 +39,4 @@ app.use(authentication)
 app.use("/graphql", graphqlRout)
 app.use("/post", postRout)
 
-
-// Start listening to port 5000
-app.listen(5000, () => console.log("Server is running on port 5000"));
+export default app;

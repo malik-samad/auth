@@ -1,0 +1,34 @@
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  IMAGE_URI:
+    Type: String
+  ENCRYPTION_KEY:
+    Type: String
+    NoEcho: true
+  ENVIRONMENT:
+    Type: String
+
+Conditions:
+  IS_PRODUCTION:
+    Fn::Equals:
+      - !Ref ENVIRONMENT
+      - "production"
+
+Resources:
+  Server:
+    Type: AWS::Lambda::Function
+    Properties:
+      PackageType: Image
+      Timeout: 300
+      ImageUri: !Ref IMAGE_URI
+      MemorySize: 512
+      Events:
+        - http:
+            Path: /
+            Method: ANY
+            cors: true
+        - http:
+            path: /{proxy+}
+            method: ANY
+            cors: true
