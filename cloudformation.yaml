@@ -1,28 +1,32 @@
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
-  IMAGE_URI:
+  ImageURI:
     Type: String
-  ENCRYPTION_KEY:
+  EncryptionKey:
     Type: String
     NoEcho: true
-  ENVIRONMENT:
+  Environment:
     Type: String
 
 Conditions:
   IS_PRODUCTION:
     Fn::Equals:
-      - !Ref ENVIRONMENT
+      - !Ref Environment
       - "production"
 
 Resources:
-  Server:
+  AuthServer:
     Type: AWS::Lambda::Function
     Properties:
       PackageType: Image
       Timeout: 300
-      ImageUri: !Ref IMAGE_URI
+      ImageUri: !Ref ImageURI
       MemorySize: 512
+      Environment:
+        Variables:
+          NODE_ENV: !Ref Environment
+          ENCRYPTION_KEY: !Ref EncryptionKey
       Events:
         - http:
             Path: /
