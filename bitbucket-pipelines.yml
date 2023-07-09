@@ -1,0 +1,41 @@
+options:
+  size: "1x"
+
+image: node:16
+
+pipelines:
+  branches:
+    pull-requests:
+      - step:
+          name: "Test"
+          # max-time: 10
+          # size: "1x"
+          script:
+            - echo "Testing..."
+          trigger: automatic
+    main:
+      - step:
+          name: "Build"
+          script:
+            - npm ci
+            - npm run build
+            - ls
+          artifacts:
+            - build/**
+            - Dockerfile
+      - step:
+          name: "Deploy"
+          image: atlassian/pipelines-awscli:1.21.7
+          caches:
+            - docker
+          services:
+            - docker
+          script:
+            # ecr login
+            - eval $(aws ecr get-login --no-include-email --region eu-west-2)
+            # build and push docker image
+            - docker build -t "175837576321.dkr.ecr.eu-west-2.amazonaws.com/auth:$BITBUCKET_BUILD_NUMBER" .
+            - docker push "175837576321.dkr.ecr.eu-west-2.amazonaws.com/auth:$BITBUCKET_BUILD_NUMBER"
+            # AWS deploy using cloudformation template
+            - aws cloudformation deploy --template-file "cloudformation.yaml" --stack-name "Auth-Production" --parameter-overrides EncryptionKey=$EncryptionKey Environment="Production" ImageURI=175837576321.dkr.ecr.eu-west-2.amazonaws.com/auth:$BITBUCKET_BUILD_NUMBER --capabilities "CAPABILITY_AUTO_EXPAND" "CAPABILITY_IAM"
+          # trigger: manual

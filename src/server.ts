@@ -35,8 +35,9 @@ app.use(express.urlencoded());
 app.use("/user", userRout)
 app.use("/doc", swaggerRout)
 
-app.use(authentication)
-app.use("/graphql", graphqlRout)
-app.use("/post", postRout)
-
+app.use("/graphql", authentication, graphqlRout)
+app.use("/post", authentication, postRout)
+app.use("*", (req, res) => {
+    res.redirect("/doc/")
+})
 export default app;

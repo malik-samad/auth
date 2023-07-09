@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 
 export const ENVIRONMENT = process.env.NODE_ENV || process.env.NODE_CONFIG_ENV || "production"
 export const IS_DEVELOPMENT = ENVIRONMENT == "development"
+console.log({ ENVIRONMENT })
 
 dotenv.config({ path: `.env.${ENVIRONMENT}` });
 

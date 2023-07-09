@@ -8,7 +8,7 @@ const {
 } = process.env;
 
 module.exports = {
-    entry: './src/server.ts',
+    entry: './src/index.ts',
     mode: NODE_ENV,
     watch: NODE_ENV == "development",
     plugins: [
@@ -46,8 +46,7 @@ module.exports = {
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, 'build'),
-        library: "handler",
-        // libraryTarget: 'umd',
-        // globalObject: 'this',
+        libraryTarget: 'umd',
+        globalObject: 'this',
     },
 };
